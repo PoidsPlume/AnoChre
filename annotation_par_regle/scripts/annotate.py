@@ -7,12 +7,14 @@ do_download = False
 if do_download:
     for dl in download("fro"):
         x = 1
+#set_up
+iterator, processor = get_iterator_and_processor()		
+model_name = "fro"
+tagger = get_tagger(model_name, batch_size=256, device="cuda", model_path=None)
 
-modelname = "fro"
-tagger = get_tagger(model_name, batch_size=256, device="gpu", model_path=None)
+def get_POS_tag(verse):
+	output = tagger.tag_str(verse, iterator=iterator, processor=processor))
+	POS_list = [entry['POS'] for entry in output]
+	return POS_list
 
-
-sentences: List[str] = ["Et la turtre chacier le bievre"]
-for sentence_group in sentences:
-    iterator, processor = get_iterator_and_processor()
-    print(tagger.tag_str(sentence_group, iterator=iterator, processor=processor) )
+print(get_POS_tag("Et la turtre chacier le bievre"))
