@@ -1,0 +1,122 @@
+def is_vowel(letter):
+	vowels = [
+	'a', 'A', 'á', 'Á', 'à', 'À', 'â', 'Â', 'ä', 'Ä', 'ã', 'Ã', 'å', 'Å', 'æ', 'Æ',
+	'e', 'E', 'é', 'É', 'è', 'È', 'ê', 'Ê', 'ë', 'Ë', 'ė', 'Ė', 'ę', 'Ę', 'ě', 'Ě',
+	'i', 'I', 'í', 'Í', 'ì', 'Ì', 'î', 'Î', 'ï', 'Ï', 'ĩ', 'Ĩ', 'į', 'Į', 'ī', 'Ī',
+	'o', 'O', 'ó', 'Ó', 'ò', 'Ò', 'ô', 'Ô', 'ö', 'Ö', 'õ', 'Õ', 'ø', 'Ø', 'œ', 'Œ',
+	'u', 'U', 'ú', 'Ú', 'ù', 'Ù', 'û', 'Û', 'ü', 'Ü', 'ũ', 'Ũ', 'ų', 'Ų', 'ū', 'Ū',
+	'y', 'Y', 'ý', 'Ý', 'ÿ', 'Ÿ', 'ŷ', 'Ŷ'
+	]
+	return letter in vowels
+
+def is_consonant(letter):
+	consonant = [
+	'b', 'B', 'c', 'C', 'ç', 'Ç', 'č', 'Č', 'ć', 'Ć',
+	'd', 'D', 'ď', 'Ď', 'đ', 'Đ',
+	'f', 'F',
+	'g', 'G', 'ğ', 'Ğ',
+	'h', 'H', 'ħ', 'Ħ',
+	'j', 'J',
+	'k', 'K', 'ĸ', 'Ĺ',
+	'l', 'L', 'ł', 'Ł', 'ļ', 'Ļ', 'ľ', 'Ľ',
+	'm', 'M',
+	'n', 'N', 'ń', 'Ń', 'ň', 'Ň', 'ņ', 'Ņ', 'ñ', 'Ñ',
+	'p', 'P',
+	'q', 'Q',
+	'r', 'R', 'ŕ', 'Ŕ', 'ř', 'Ř',
+	's', 'S', 'ś', 'Ś', 'š', 'Š', 'ş', 'Ş',
+	't', 'T', 'ť', 'Ť', 'ţ', 'Ţ',
+	'v', 'V',
+	'w', 'W', 'ŵ', 'Ŵ',
+	'x', 'X',
+	'z', 'Z', 'ź', 'Ź', 'ż', 'Ż', 'ž', 'Ž'
+	]
+	return letter in consonant
+
+def is_diphtong(letters):
+	diphtongues = [
+	'ai', 'au', 'ei', 'eu', 'oi', 'ou', 'ua', 'ui', 'uo', 'Ai', 'Au', 'Ei', 'Eu', 'Oi', 'Ou', 'Ua', 'Ui', 'Uo'
+	]
+	return letters in diphtongues
+
+def is_diphtong_e(letters):
+	diphtongues = [
+	'ie', 'ue', 'oe'
+	]
+	return letters in diphtongues
+
+def divide_word_into_syllables(word):
+	syllables = []
+	syllable = ""
+	i = 0
+	while i < len(word):
+		#ajoute les lettres à la syllabe tant que ce ont des consonnes, si une syllabe n'a pas de voyelle à la fin, la rattache à la syllabe précédente
+		if is_consonant(word[i]):
+			syllable = syllable + word[i]
+			if i == len(word) - 1:
+				for letter in syllable:
+					had_vowel = is_vowel(letter)
+					if had_vowel:
+						break
+				if had_vowel:
+					syllables.append(syllable)
+				else:
+					syllables[-1] = syllables[-1] + syllable
+			i = i + 1
+		#gestion des voyelles
+		elif is_vowel(word[i]):
+			#gestion des diphtongues
+			if i + 1 <= len(word):
+				if is_diphtong(word[i:i+2]):
+					syllable = syllable + word[i:i+2]
+					i = i + 2
+				elif i + 3 <= len(word):
+					#ne considère pas les diphtongues terminant par un e comme un diphtong pour garder la prononciation du e final
+					if is_diphtong_e(word[i:i+2]) and is_consonant(word[i+2]): 
+						syllable = syllable + word[i:i+2]
+						i = i + 2
+					else:
+						syllable = syllable + word[i]
+						i = i + 1
+				else:
+					syllable = syllable + word[i]
+					i = i + 1
+					
+			else:	
+				syllable = syllable + word[i]
+				i = i + 1
+			syllables.append(syllable)
+			syllable = ""
+		#gestion des caractères inconnus
+		else:
+			print(f"Le caractère '{word[i]}' est inconnu\nMot traité: {word}\nEtat de la syllabe: {syllable}")
+			user_input = input("Tapez '0' pour supprimer le caractère, '1' pour l'ajouter à la syllabe en cours, '2' pour commencer une nouvelle syllabe par ce caractère\n")
+			match user_input:
+				case '1':
+					syllable = syllable + word[i]
+				case '2':
+					syllables.append(syllable)
+					syllable = word[i]
+			i = i + 1
+	#gestion des mots d'une syllabe commençant par 'qu' (qui, que, quoi, quais) 
+	#for word in syllables:
+	#	for 
+	# A FAIRE
+	
+	#répartition des consonnes correctement entre les syllabes
+	i = 1
+	while i < len(syllables):
+		if len(syllables[i]) > 2:
+			if is_consonant(syllables[i][0]) and is_consonant(syllables[i][1]) and not syllables[i][0:2] == 'ch':
+				syllables[i-1] = syllables[i-1] + syllables[i][0]
+				syllables[i] = syllables[i][1:len(syllables[i])]
+		i = i + 1
+	
+	return syllables
+
+def divide_verse_into_syllables(verse):
+	words = verse.split()
+	syllables = []
+	for word in words:
+		syllables.append(divide_word_into_syllables(word))
+	return syllables
