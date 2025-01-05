@@ -6,7 +6,7 @@ import re
 def init_client():
 	client = anthropic.Anthropic(
     	# defaults to os.environ.get("ANTHROPIC_API_KEY")
-    	api_key="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",
+    	api_key= # add key,
 	)	
 	
 def nouveau_dossier(path_name):
