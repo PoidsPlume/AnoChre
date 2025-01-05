@@ -99,15 +99,15 @@ def divide_word_into_syllables(word):
 					syllable = word[i]
 			i = i + 1
 	
+	#gestion qu
 	if len(syllables) > 1:
-		for i in range(len(syllables)):
-			if syllables[i][0:2] == 'qu' and is_vowel(syllables[i+1][0]) and (is_diphtong(syllables[i][-1] + syllables[i+1][0]) or is_diphtong_e(syllables[i][-1] + syllables[i+1][0])):
-				print("oui")
+		for i in range(len(syllables) - 1):
+			if syllables[i][0:2] == 'qu' and is_vowel(syllables[i+1][0]): #and (is_diphtong(syllables[i][-1] + syllables[i+1][0]) or is_diphtong_e(syllables[i][-1] + syllables[i+1][0])):
 				syllables[i] = syllables[i] + syllables[i+1][0]
 				syllables[i+1] = syllables[i+1][1:len(syllables[i+1])]
 		
 	
-	# A FAIRE
+	# A FAIRE -> gestion de la coupure des verbes qui finissent par 'uent' ou 'ient' ou 'oent'
 	
 	#répartition des consonnes correctement entre les syllabes
 	i = 1
@@ -124,7 +124,7 @@ def divide_word_into_syllables(word):
 			had_vowel.append(is_vowel(letter))
 		if True not in had_vowel:
 			syllables[i-1] = syllables[i-1] + syllables[i]
-			syllables[i] = ''
+			syllables[i] = '' 
 					
 	
 	if '' in syllables:
