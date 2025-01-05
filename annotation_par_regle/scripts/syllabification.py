@@ -98,9 +98,15 @@ def divide_word_into_syllables(word):
 					syllables.append(syllable)
 					syllable = word[i]
 			i = i + 1
-	#gestion des mots d'une syllabe commençant par 'qu' (qui, que, quoi, quais) 
-	#for word in syllables:
-	#	for 
+	
+	if len(syllables) > 1:
+		for i in range(len(syllables)):
+			if syllables[i][0:2] == 'qu' and is_vowel(syllables[i+1][0]) and (is_diphtong(syllables[i][-1] + syllables[i+1][0]) or is_diphtong_e(syllables[i][-1] + syllables[i+1][0])):
+				print("oui")
+				syllables[i] = syllables[i] + syllables[i+1][0]
+				syllables[i+1] = syllables[i+1][1:len(syllables[i+1])]
+		
+	
 	# A FAIRE
 	
 	#répartition des consonnes correctement entre les syllabes
@@ -112,6 +118,18 @@ def divide_word_into_syllables(word):
 				syllables[i] = syllables[i][1:len(syllables[i])]
 		i = i + 1
 	
+	for i in range(len(syllables))[1:len(syllables)]:
+		had_vowel = []
+		for letter in syllables[i]:
+			had_vowel.append(is_vowel(letter))
+		if True not in had_vowel:
+			syllables[i-1] = syllables[i-1] + syllables[i]
+			syllables[i] = ''
+					
+	
+	if '' in syllables:
+		syllables.remove('')
+		
 	return syllables
 
 def divide_verse_into_syllables(verse):
