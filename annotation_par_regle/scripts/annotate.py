@@ -9,14 +9,16 @@ do_download = False
 if do_download:
     for dl in download("fro"):
         x = 1
-set_up
+#set_up
 iterator, processor = get_iterator_and_processor()		
 model_name = "fro"
 tagger = get_tagger(model_name, batch_size=256, device="cuda", model_path=None)
 
 def get_POS_tag(verse):
 	output = tagger.tag_str(verse, iterator=iterator, processor=processor)
-	POS_list, lemma_list, morph_list = [entry['POS'], entry['lemma'], entry['morph'] for entry in output]
+	POS_list  = [entry['POS'] for entry in output]
+	lemma_list = [entry['lemma'] for entry in output]
+	morph_list = [entry['morph'] for entry in output]
 	return POS_list, lemma_list, morph_list
 
 def syllabed_to_verse(syllabed):
@@ -76,10 +78,10 @@ def correct_annotation(syllabed, ano_verse, POS): #POS du dernier mot du vers
 
 def annotation(syllabed):
 	verse = syllabed_to_verse(syllabed)
-	POS_list, lema_list, morph_list = get_POS_tag(verse)
+	POS_list, lemma_list, morph_list = get_POS_tag(verse)
 	ano_verse = annotate_step(syllabed, POS_list, lemma_list, morph_list)
 	ano_verse = correct_annotation(syllabed, ano_verse, POS_list[-1])
 	return ano_verse
 	
 
-print(annotation("Et la turtre chacier le bievre"))
+print(annotation([['Et'], ['la'], ['tur', 'tre'], ['cha', 'cier'], ['le'], ['biev', 're']]))
