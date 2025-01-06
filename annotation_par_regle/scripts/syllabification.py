@@ -91,12 +91,11 @@ def divide_word_into_syllables(word):
 		else:
 			print(f"Le caractère '{word[i]}' est inconnu\nMot traité: {word}\nEtat de la syllabe: {syllable}")
 			user_input = input("Tapez '0' pour supprimer le caractère, '1' pour l'ajouter à la syllabe en cours, '2' pour commencer une nouvelle syllabe par ce caractère\n")
-			match user_input:
-				case '1':
-					syllable = syllable + word[i]
-				case '2':
-					syllables.append(syllable)
-					syllable = word[i]
+			if user_input == '1':
+				syllable = syllable + word[i]
+			elif user_input == '2':
+				syllables.append(syllable)
+				syllable = word[i]
 			i = i + 1
 	
 	#gestion qu
