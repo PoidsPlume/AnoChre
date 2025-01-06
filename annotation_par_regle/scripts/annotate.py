@@ -1,4 +1,4 @@
-from syllabification import is_vowel
+from .syllabification import is_vowel
 
 from typing import List
 from pie_extended.cli.utils import get_tagger, get_model
@@ -71,7 +71,7 @@ def correct_annotation(syllabed, ano_verse, POS): #POS du dernier mot du vers
 	for i in range(len(dots)):
 		dot_pos = dots[i]
 		if ano_verse[dot_pos - 1] == 'w' :
-			if is_weak(syllabed[i][-1], 'None') and is_vowel(syllabed[i+1][0][0]): #suppression du 'u' ou pas ?, à tester
+			if len(syllabed[i]) > 1 and is_weak(syllabed[i][-1], 'None') and is_vowel(syllabed[i+1][0][0]): #suppression du 'u' ou pas ?, à tester
 				ano_verse[dot_pos - 1] = 'e'
 	
 	return "".join(ano_verse)	
@@ -83,5 +83,3 @@ def annotation(syllabed):
 	ano_verse = correct_annotation(syllabed, ano_verse, POS_list[-1])
 	return ano_verse
 	
-
-print(annotation([['Et'], ['la'], ['tur', 'tre'], ['cha', 'cier'], ['le'], ['biev', 're']]))
