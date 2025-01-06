@@ -15,11 +15,20 @@ model_name = "fro"
 tagger = get_tagger(model_name, batch_size=256, device="cuda", model_path=None)
 
 def get_POS_tag(verse):
-	output = tagger.tag_str(verse, iterator=iterator, processor=processor)
-	POS_list  = [entry['POS'] for entry in output]
-	lemma_list = [entry['lemma'] for entry in output]
-	morph_list = [entry['morph'] for entry in output]
-	return POS_list, lemma_list, morph_list
+    output = tagger.tag_str(verse, iterator=iterator, processor=processor)
+    POS_list  = [entry['POS'] for entry in output]
+    lemma_list = [entry['lemma'] for entry in output]
+    morph_list = [entry['morph'] for entry in output]
+    #supprime les entrées comprenant une apostrophe car elles sont importantes pour le POS_tagging mais n'ont aucun intérêt pour l'annotation 
+    apo_index = []
+    for index, token in enumerate([entry['form'] for entry in output]):
+        if "'" in token or "’" in token or "ʼ" in token:
+            apo_index.append(index)
+    for index in reversed(apo_index):
+        del POS_list[index]
+        del lemma_list[index]
+        del morph_list[index]
+    return POS_list, lemma_list, morph_list
 
 def syllabed_to_verse(syllabed):
 	verse_list = []
@@ -30,8 +39,8 @@ def syllabed_to_verse(syllabed):
 	return verse
 
 def is_tool_word(POS, lemma, morph):
-	toolPOS = ['PRO', 'DET', 'PRE', 'CON', 'ETR', 'ABR', 'RED', 'OUT']
-	maybeToolPOS= ['ADV', 'VER'] #toolword if lemma avoir or estre1 for verb and not toolword if morph ADV has DEGRE inside
+	toolPOS = ['PRO', 'DET', 'PRE', 'CON', 'ETR', 'ABR', 'RED', 'OUT', 'ADV']
+	maybeToolPOS= ['VER'] #toolword if lemma avoir or estre1 for verb and not toolword if morph ADV has DEGRE inside
 	return (POS in toolPOS) or (POS in maybeToolPOS and (lemma in ['avoir', 'estre1'] or 'DEGRE' not in morph and POS == 'ADV'))
 
 def is_weak(syl, POS):
@@ -71,7 +80,7 @@ def correct_annotation(syllabed, ano_verse, POS): #POS du dernier mot du vers
 	for i in range(len(dots)):
 		dot_pos = dots[i]
 		if ano_verse[dot_pos - 1] == 'w' :
-			if len(syllabed[i]) > 1 and is_weak(syllabed[i][-1], 'None') and is_vowel(syllabed[i+1][0][0]): #suppression du 'u' ou pas ?, à tester
+			if len(syllabed[i]) > 1 and syllabed[i][-1][-1] == 'e' and is_vowel(syllabed[i+1][0][0]): #suppression du 'u' ou pas ?, à tester
 				ano_verse[dot_pos - 1] = 'e'
 	
 	return "".join(ano_verse)	

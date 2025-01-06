@@ -33,6 +33,9 @@ def is_consonant(letter):
 	]
 	return letter in consonant
 
+def is_neutral(char):
+	return char in [ "’",  "'",  "ʼ" ]
+
 def is_diphtong(letters):
 	diphtongues = [
 	'ai', 'au', 'ei', 'eu', 'oi', 'ou', 'ua', 'ui', 'uo', 'Ai', 'Au', 'Ei', 'Eu', 'Oi', 'Ou', 'Ua', 'Ui', 'Uo'
@@ -41,7 +44,7 @@ def is_diphtong(letters):
 
 def is_diphtong_e(letters):
 	diphtongues = [
-	'ie', 'ue', 'oe'
+	'ie', 'ue', 'oe', 'io'
 	]
 	return letters in diphtongues
 
@@ -50,7 +53,7 @@ def divide_word_into_syllables(word):
 	syllable = ""
 	i = 0
 	while i < len(word):
-		#ajoute les lettres à la syllabe tant que ce ont des consonnes, si une syllabe n'a pas de voyelle à la fin, la rattache à la syllabe précédente
+		#ajoute les lettres à la syllabe tant que ce sont des consonnes, si une syllabe n'a pas de voyelle à la fin, la rattache à la syllabe précédente
 		if is_consonant(word[i]):
 			syllable = syllable + word[i]
 			if i == len(word) - 1:
@@ -66,13 +69,13 @@ def divide_word_into_syllables(word):
 		#gestion des voyelles
 		elif is_vowel(word[i]):
 			#gestion des diphtongues
-			if i + 1 <= len(word):
-				if is_diphtong(word[i:i+2]):
+			if i + 1 < len(word):
+				if is_diphtong(word[i:i+2]) or is_neutral(word[i+1]):
 					syllable = syllable + word[i:i+2]
 					i = i + 2
-				elif i + 3 <= len(word):
+				elif i + 2 < len(word):
 					#ne considère pas les diphtongues terminant par un e comme un diphtong pour garder la prononciation du e final
-					if is_diphtong_e(word[i:i+2]) and is_consonant(word[i+2]): 
+					if is_diphtong_e(word[i:i+2]): #and is_consonant(word[i+2]): 
 						syllable = syllable + word[i:i+2]
 						i = i + 2
 					else:
@@ -87,6 +90,9 @@ def divide_word_into_syllables(word):
 				i = i + 1
 			syllables.append(syllable)
 			syllable = ""
+		elif is_neutral(word[i]):
+			syllable = syllable + word[i]
+			i = i + 1
 		#gestion des caractères inconnus
 		else:
 			print(f"Le caractère '{word[i]}' est inconnu\nMot traité: {word}\nEtat de la syllabe: {syllable}")
