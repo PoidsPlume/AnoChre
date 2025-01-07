@@ -74,7 +74,7 @@ def find_dot_positions(input_string):
 def correct_annotation(syllabed, ano_verse, POS): #POS du dernier mot du vers
 	ano_verse = list(ano_verse)
 	dots = find_dot_positions(ano_verse)
-	if ano_verse[-1] == 'w':
+	if ano_verse[-1] == 'w' and len(syllabed[-1] > 1):
 		if is_weak(syllabed[-1][-1], POS):
 			ano_verse[-1] = 'e'
 	for i in range(len(dots)):
