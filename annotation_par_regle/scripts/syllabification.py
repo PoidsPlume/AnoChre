@@ -38,7 +38,7 @@ def is_neutral(char):
 
 def is_diphtong(letters):
 	diphtongues = [
-	'ai', 'au', 'ei', 'eu', 'oi', 'ou', 'ua', 'ui', 'uo', 'Ai', 'Au', 'Ei', 'Eu', 'Oi', 'Ou', 'Ua', 'Ui', 'Uo'
+	'ai', 'au', 'ei', 'eu', 'oi', 'ou', 'ua', 'ui', 'uo', 'ìi', 'íi'
 	]
 	return letters in diphtongues
 
