@@ -56,7 +56,7 @@ def divide_word_into_syllables(word):
 		#ajoute les lettres à la syllabe tant que ce sont des consonnes, si une syllabe n'a pas de voyelle à la fin, la rattache à la syllabe précédente
 		if is_consonant(word[i]):
 			syllable = syllable + word[i]
-			if i == len(word) - 1:
+			if i == len(word) - 1 and len(syllables) > 0:
 				for letter in syllable:
 					had_vowel = is_vowel(letter)
 					if had_vowel:

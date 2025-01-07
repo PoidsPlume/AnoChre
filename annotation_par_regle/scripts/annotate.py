@@ -53,7 +53,7 @@ def is_weak(syl, POS):
 
 def annotate_step(syllabed, POS_list, lemma_list, morph_list):
 	ano_verse = ''
-	for i in range(len(syllabed)):
+	for i in range(len(lemma_list)):
 		if is_tool_word(POS_list[i][0:3], lemma_list[i], morph_list[i]):
 			ano_verse = ano_verse + len(syllabed[i]) * 'w' 
 		else:
@@ -89,6 +89,9 @@ def annotation(syllabed):
 	verse = syllabed_to_verse(syllabed)
 	POS_list, lemma_list, morph_list = get_POS_tag(verse)
 	ano_verse = annotate_step(syllabed, POS_list, lemma_list, morph_list)
-	ano_verse = correct_annotation(syllabed, ano_verse, POS_list[-1])
+	try:
+		ano_verse = correct_annotation(syllabed, ano_verse, POS_list[-1])
+	except:
+		print(f"{syllabed} + est vide")
 	return ano_verse
 	
