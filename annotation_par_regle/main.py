@@ -22,7 +22,13 @@ for p in Path('./clean_data/').glob('*.txt') :
 	content = st.file_to_lines(str(p))
 	st.new_empty_file(filename)
 	for line in content:
-		s_verse = divide_verse_into_syllables(line.lower())
-		ano_verse = annotation(s_verse)
-		with open(filename, 'a', encoding="utf-8") as f:
-			f.write(ano_verse + '\n')
+		try:
+			s_verse = divide_verse_into_syllables(line.lower())
+		except:
+			print(f"Erreur lors de la division en syllabes de la linge: {line}")
+		try:
+			ano_verse = annotation(s_verse)
+			with open(filename, 'a', encoding="utf-8") as f:
+				f.write(ano_verse + '\n')
+		except:
+			print(f"Erreur lors de l'annotation de la ligne: {line}")
