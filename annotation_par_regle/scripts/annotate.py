@@ -53,17 +53,18 @@ def is_weak(syl, POS):
 
 def annotate_step(syllabed, POS_list, lemma_list, morph_list):
 	ano_verse = ''
-	for i in range(len(lemma_list)):
+	for i in range(len(POS_list)):
 		if is_tool_word(POS_list[i][0:3], lemma_list[i], morph_list[i]):
 			ano_verse = ano_verse + len(syllabed[i]) * 'w' 
 		else:
-			if is_weak(syllabed[i][-1], POS_list[i][0:3]):
-				if len(syllabed[i]) == 1:
-					   ano_verse = ano_verse + 'w'
+			if len(syllabed[i]) > 0:
+				if is_weak(syllabed[i][-1], POS_list[i][0:3]):
+					if len(syllabed[i]) == 1:
+						   ano_verse = ano_verse + 'w'
+					else:
+						ano_verse = ano_verse + (len(syllabed[i]) - 2) * 'w' + 'Sw'
 				else:
-					ano_verse = ano_verse + (len(syllabed[i]) - 2) * 'w' + 'Sw'
-			else:
-				ano_verse = ano_verse + (len(syllabed[i]) - 1) * 'w' + 'S'
+					ano_verse = ano_verse + (len(syllabed[i]) - 1) * 'w' + 'S'
 		ano_verse = ano_verse + '.'
 	return ano_verse[0:-1] #[0:-1] sert à ne pas afficher le dernier point
 
@@ -86,6 +87,7 @@ def correct_annotation(syllabed, ano_verse, POS): #POS du dernier mot du vers
 	return "".join(ano_verse)	
 
 def annotation(syllabed):
+	syllabed = [sublist for sublist in syllabed if sublist] #supprime les éléments vides
 	verse = syllabed_to_verse(syllabed)
 	POS_list, lemma_list, morph_list = get_POS_tag(verse)
 	ano_verse = annotate_step(syllabed, POS_list, lemma_list, morph_list)

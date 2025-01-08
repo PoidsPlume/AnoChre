@@ -29,7 +29,7 @@ def compare(list1, list2):
 
 
 #f_name1 = "temoin_claude.txt"
-f_name1 = "temoin.txt"
-f_name2 = "temoin_controle.txt"
+f_name1 = "test_file.txt"
+f_name2 = "test_controle.txt"
 list_ai, list_control = make_list(f_name1, f_name2)
 print("Taux de confiance = ", compare(list_ai, list_control))
